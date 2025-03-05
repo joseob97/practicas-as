@@ -1,0 +1,39 @@
+version: '3.8'
+
+networks:
+  private_network:
+    ipam:
+      config:
+        - subnet: 172.40.0.0/24
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: db.dev.local
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    networks:
+      private_network:
+        ipv4_address: 172.40.0.2
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  webserver:
+    image: httpd:latest
+    container_name: dev.local
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      private_network:
+        ipv4_address: 172.40.0.3
+    volumes:
+      - ./html:/usr/local/apache2/htdocs
+      - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
+
+volumes:
+  mysql_data:
