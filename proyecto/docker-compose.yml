@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Service (original)
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user_prod
+      POSTGRES_PASSWORD: password_prod
+      POSTGRES_DB: prod_db
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+
+  # Nginx Service (original)
+  nginx:
+    image: nginx:latest
+    container_name: nginx_prod
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./html:/usr/share/nginx/html
+    ports:
+      - "80:80"
+    networks:
+      - backend
+    depends_on:
+      - db
+    restart: always
+
+  # MySQL Service (nuevo)
+  mysql:
+    image: mysql:latest
+    container_name: db.dev.local
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    networks:
+      private_network:
+        ipv4_address: 172.40.0.2
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Webserver Service (nuevo)
+  webserver:
+    image: httpd:latest
+    container_name: dev.local
+    restart: always
+    networks:
+      private_network:
+        ipv4_address: 172.40.0.3
+    volumes:
+      - ./html:/usr/local/apache2/htdocs
+      - ./apache-conf:/usr/local/apache2/httpd.conf
+
+networks:
+  # Red privada para MySQL y Webserver
+  private_network:
+    ipam:
+      config:
+        - subnet: 172.40.0.0/24
+
+  # Red de backend para PostgreSQL y Nginx
+  backend:
+    driver: bridge
+
+volumes:
+  # Volúmenes persistentes para MySQL y PostgreSQL
+  mysql_data:
+  pg_data:
+
+  
