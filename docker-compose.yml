@@ -1,36 +1,59 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Service (original)
+  # Bloque PostgreSQL y Nginx
   db:
     image: postgres:latest
     container_name: postgres_db
     environment:
-      POSTGRES_USER: user_prod
-      POSTGRES_PASSWORD: password_prod
-      POSTGRES_DB: prod_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: production_db
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
-      - backend
+      production_net:
+        ipv4_address: 172.30.0.11
+      services_net:
+        ipv4_address: 172.20.0.11
+    command: ["postgres", "-c", "shared_preload_libraries=pg_trgm"]
     restart: always
 
-  # Nginx Service (original)
   nginx:
     image: nginx:latest
     container_name: nginx_prod
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./html:/usr/share/nginx/html
+      - drupal_data:/var/www/html
     ports:
       - "80:80"
     networks:
-      - backend
+      production_net:
+        ipv4_address: 172.30.0.12
     depends_on:
       - db
     restart: always
 
-  # MySQL Service (nuevo)
+  drupal:
+    image: drupal:php8.3-fpm
+    container_name: drupal_prod
+    depends_on:
+      - db
+    environment:
+      DRUPAL_DB_HOST: postgres_db
+      DRUPAL_DB_NAME: production_db
+      DRUPAL_DB_USER: admin
+      DRUPAL_DB_PASSWORD: admin123
+    ports:
+      - "9000:9000"
+    networks:
+      production_net:
+        ipv4_address: 172.30.0.10
+    volumes:
+      - drupal_data:/var/www/html
+    restart: always
+
+  # Bloque Apache y MySQL
   mysql:
     image: mysql:latest
     container_name: db.dev.local
@@ -46,7 +69,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
-  # Webserver Service (nuevo)
   webserver:
     image: httpd:latest
     container_name: dev.local
@@ -58,18 +80,44 @@ services:
       - ./html:/usr/local/apache2/htdocs
       - ./apache-conf:/usr/local/apache2/httpd.conf
 
+  # Bloque NAS + DNS Server
+  nas_dns:
+    image: debian:latest
+    container_name: nas_dns
+    tty: true
+    networks:
+      services_net:
+        ipv4_address: 172.20.0.10
+    volumes:
+      - nas_data:/mnt/backups
+      - ./backup_scripts:/scripts
+      - ./dns_config:/etc/bind
+    command: bash
+    restart: always
+
 networks:
+  # Red de producción para PostgreSQL y Nginx
+  production_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+
   # Red privada para MySQL y Webserver
   private_network:
     ipam:
       config:
         - subnet: 172.40.0.0/24
 
-  # Red de backend para PostgreSQL y Nginx
-  backend:
+  # Red de servicios para NAS y DNS
+  services_net:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
 
 volumes:
-  # Volúmenes persistentes para MySQL y PostgreSQL
-  mysql_data:
   pg_data:
+  drupal_data:
+  nas_data:
+  mysql_data:
