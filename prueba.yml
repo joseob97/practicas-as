@@ -102,21 +102,23 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/24
-        
+          gateway: 172.20.0.1
+          
   # Red de producción para PostgreSQL y Nginx
   production_net:
     driver: bridge
     ipam:
       config:
         - subnet: 172.30.0.0/24
-
+          gateway: 172.30.0.1
+        
   # Red privada para MySQL y Webserver
   development_net:
     driver: bridge
     ipam:
       config:
         - subnet: 172.40.0.0/24
-
+          gateway: 172.40.0.1
 
 volumes:
   pg_data:
