@@ -141,6 +141,7 @@ services:
 #------------------------NETWORKS--------------------#
 networks:
   services_net:
+    name: services_net
     driver: macvlan
     driver_opts:
       parent: ens18
@@ -150,6 +151,7 @@ networks:
           gateway: 172.20.0.1
 
   production_net:
+    name: production_net
     driver: macvlan
     driver_opts:
       parent: ens19
@@ -159,6 +161,7 @@ networks:
           gateway: 172.30.0.1
 
   development_net:
+    name: development_net
     driver: macvlan
     driver_opts:
       parent: ens20
