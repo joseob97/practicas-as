@@ -118,7 +118,7 @@ services:
   
 
   drupal2:
-    image: drupal:php8.3-fpm
+    image: drupal:php8.3-apache
     container_name: dev.local
     restart: always
     volumes:
@@ -129,7 +129,7 @@ services:
       DRUPAL_DB_USER: ${DRUPAL2_DB_USER}
       DRUPAL_DB_PASSWORD: ${DRUPAL2_DB_PASSWORD}
     ports:
-      - "8082:9000"
+      - "8082:80"
     dns:
       - 172.20.0.6
     networks:
