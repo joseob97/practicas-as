@@ -143,7 +143,7 @@ networks:
   services_net:
     driver: macvlan
     driver_opts:
-      parent: em1
+      parent: ens18
     ipam:
       config:
         - subnet: 172.20.0.0/24
@@ -152,7 +152,7 @@ networks:
   production_net:
     driver: macvlan
     driver_opts:
-      parent: em2
+      parent: ens19
     ipam:
       config:
         - subnet: 172.30.0.0/24
@@ -161,7 +161,7 @@ networks:
   development_net:
     driver: macvlan
     driver_opts:
-      parent: em3
+      parent: ens20
     ipam:
       config:
         - subnet: 172.40.0.0/24
