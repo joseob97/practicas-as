@@ -1,7 +1,5 @@
 #----------------------------CONTENEDORES-------------------------------#
 
-version: '3.8'
-
 services:
 
   # Bloque NAS + DNS Server
@@ -9,7 +7,7 @@ services:
     image: debian:latest
     container_name: nas_serv
     restart: always
-    command: bash /backups/startup.sh
+    command: bash ./backups/inicio.sh
     environment:
       MYSQL_ROOT_PASSWORD: password
       POSTGRES_PASSWORD: password
@@ -29,10 +27,10 @@ services:
     dns:
       - 172.20.0.6
     volumes:
-      - ./dns_config:/etc/bind
-      - ./logs:/var/log/named
-      - ./zones:/var/lib/bind
-      - /etc/localtime:/etc/localtime:ro
+      - ./bind/config:/etc/bind
+      - ./bind/config/zones:/etc/bind/zones
+      - dns_cache:/var/cache/bind
+      - dns_logs:/var/log
     environment:
       - TZ=Europe/Madrid
     networks:
@@ -46,7 +44,7 @@ services:
     container_name: postgresql
     restart: always
     volumes:
-      - db_prod:/bitnami/postgresql
+      - postgre_data:/bitnami/postgresql
     environment:
       POSTGRESQL_DATABASE: drupal
       POSTGRESQL_USERNAME: drupal
@@ -63,7 +61,7 @@ services:
     restart: always
     volumes:
       - ./production/server-block.conf:/opt/bitnami/nginx/conf/server_blocks/server-block.conf
-      - data_prod:/app
+      - prod_data:/app
     ports:
       - "8081:80"
     dns:
@@ -82,7 +80,7 @@ services:
     volumes:
       - ./production/iniciondrupal.sh:/iniciodrupal.sh
       - ./production/php.ini:/opt/bitnami/php/etc/php.ini
-      - data_prod:/app
+      - prod_data:/app
     environment:
       - PHP_ENABLE_OPCACHE=1
     dns:
@@ -119,7 +117,7 @@ services:
     container_name: dev.local
     restart: always
     volumes:
-      - drupal_dev_data:/var/www/html 
+      - dev_data:/var/www/html/ 
     ports:
       - "8080:80"
     dns:
@@ -165,8 +163,10 @@ networks:
 
 #--------------------------VOLUMENES-----------------------#
 volumes:
-  pg_data:
-  drupal_prod_data:
-  drupal_dev_data:
-  nas_data:
+  dev_data:
   mysql_data:
+  prod_data:
+  postgre_data:
+  dns_cache:
+  dns_logs:
+  
