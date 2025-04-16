@@ -7,6 +7,7 @@ services:
     image: debian:latest
     container_name: nas_serv
     restart: always
+    privileged: true
     command: bash ./backups/inicio.sh
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -16,29 +17,32 @@ services:
     dns:
       - 172.20.0.6
     networks:
-      bridge_local: {}
       services_net:
         ipv4_address: 172.20.0.5
     tty: true
 
   bind9:
-    image: internetsystemsconsortium/bind9:9.20
+    image: ubuntu/bind9:latest
     container_name: bind9_serv
     restart: always
     dns:
       - 172.20.0.6
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
     volumes:
       - ./bind/config:/etc/bind
       - ./bind/config/zones:/etc/bind/zones
       - dns_cache:/var/cache/bind
       - dns_logs:/var/log
     environment:
-      - TZ=Europe/Madrid
+      - BIND9_USER=root
     networks:
-      bridge_local: {}
       services_net:
         ipv4_address: 172.20.0.6
-
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+      - net.ipv6.conf.default.disable_ipv6=1
 
   # Bloque PostgreSQL y Nginx
   postgresql:
@@ -76,7 +80,7 @@ services:
       - postgresql
 
   phpfm:
-    image: 'bitnami/php-fpm:latest'
+    image: 'bitnami/php-fpm:8.1'
     container_name: phpfm
     restart: always
     entrypoint: bash /iniciodrupal.sh
