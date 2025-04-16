@@ -1,0 +1,21 @@
+  ssh_services:
+    build: ./ssh_services
+    container_name: ssh_services
+    restart: always
+    networks:
+      services_net:
+        ipv4_address: 172.20.0.9
+    ports:
+      - "2222:22"  # Solo si quieres probar desde el host
+
+  ssh_development:
+    build: ./ssh_development
+    container_name: ssh_development
+    restart: always
+    networks:
+      development_net:
+        ipv4_address: 172.40.0.9
+    ports:
+      - "2223:22"  # Solo si quieres probar desde el host
+
+
