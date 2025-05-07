@@ -1,0 +1,13 @@
+$TTL    604800
+@       IN      SOA     dns.svc.local. root.svc.local. (
+                             2         ; Serial
+                        604800         ; Refresh
+                         86400         ; Retry
+                       2419200         ; Expire
+                        604800 )       ; Negative Cache TTL
+;
+@       IN      NS      dns.svc.local.
+dns     IN      A       172.20.0.6
+nas     IN      A       172.20.0.5
+ssh     IN      A       172.20.0.9
+
