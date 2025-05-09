@@ -2,7 +2,7 @@
 
 ip route del default 2>/dev/null
 
-iface_dev=$(ip -o -4 addr show | grep '172\.40\.' | awk '{print $2}')
+iface_dev=$(ip -o -4 addr show | grep 'inet 172\.40\.0\.' | awk '{print $2}' | head -n1)
 
 if [[ -n "$iface_dev" ]]; then
     echo "Asignando gateway 172.40.0.1 a traves de $iface_dev"
