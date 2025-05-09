@@ -7,11 +7,13 @@ RUN apt update && apt install -y samba vsftpd sudo nano net-tools iputils-ping d
 
 RUN useradd -m john && echo 'john:john' | chpasswd && usermod -aG sudo john
 
+RUN mkdir -p /var/run/vsftpd/empty && chmod 755 /var/run/vsftpd/empty
+
 COPY conf/smb.conf /etc/samba/smb.conf
-COPY conf/vsftpd.conf /etc/vsftpd,conf
+COPY conf/vsftpd.conf /etc/vsftpd.conf
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 21 139 445 40000-40010
 
-CMD ["/entrypoint.sh"]
+CMD ["/bin/bash", "/entrypoint.sh"]
