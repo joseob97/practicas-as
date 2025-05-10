@@ -1,0 +1,11 @@
+Port 22
+Protocol 2
+PermitRootLogin no
+PasswordAuthentication yes
+Subsystem sftp internal-sftp
+
+Match Group sftpusers
+    ChrootDirectory /home/%u
+    ForceCommand internal-sftp
+    AllowTcpForwarding no
+    X11Forwarding no
