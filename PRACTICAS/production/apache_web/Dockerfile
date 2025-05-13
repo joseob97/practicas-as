@@ -20,7 +20,6 @@ RUN useradd -m john && echo "john:john" | chpasswd && adduser john sudo
 
 COPY errorphp.html /var/www/html/errorphp.html
 COPY index.html /var/www/html/index.html
-COPY prueba.php /var/www/html/prueba.php
 COPY default.conf /etc/apache2/sites-available/000-default.conf
 COPY entrypoint.sh /entrypoint.sh
 
