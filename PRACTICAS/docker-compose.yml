@@ -266,6 +266,7 @@ services:
     dns:
       - 172.20.0.6
     networks:
+      bridge_local: {}
       production_net:
         ipv4_address: 172.30.0.15
     ports:
