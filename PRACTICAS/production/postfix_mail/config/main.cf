@@ -1,6 +1,6 @@
 # Parámetros básicos
-myhostname = mail.empresa.com
-mydomain = empresa.com
+myhostname = postfix.production.com
+mydomain = production.com
 myorigin = $mydomain
 inet_interfaces = all
 inet_protocols = ipv4
