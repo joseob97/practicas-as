@@ -11,4 +11,6 @@ dns       IN  A       172.20.0.6
 prod      IN  A       172.30.0.6
 db        IN  A       172.30.0.7
 nginx     IN  A       172.30.0.5
-
+sftp      IN  A       172.30.0.10
+mail      IN  A       172.30.0.15
+apache    IN  A       172.30.0.20
