@@ -256,6 +256,24 @@ services:
       production_net:
         ipv4_address: 172.30.0.20
 
+  # Bloque POSTFIX-MAIL en production
+  postfix_mail:
+    build: ./production/postfix_mail
+    container_name: postfix_mail
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    dns:
+      - 172.20.0.6
+    networks:
+      production_net:
+        ipv4_address: 172.30.0.15
+    ports:
+      - "25:25"
+      - "587:587"
+    volumes:
+      - ./production/postfix_mail/config:/etc/postfix
+
   
 #------------------------NETWORKS--------------------#
 networks:
