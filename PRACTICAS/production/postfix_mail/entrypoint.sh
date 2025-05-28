@@ -34,7 +34,7 @@ chown root:mail /var/mail/root
 chown john:mail /var/mail/john
 chmod 660 /var/mail/*
 
-# Arranca postfix en foreground
+# Arranca postfix
 service postfix start
 
 # Mantiene el contenedor activo
