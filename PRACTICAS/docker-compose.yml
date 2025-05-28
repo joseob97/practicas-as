@@ -239,23 +239,23 @@ services:
   #    - samba_ftp
       
   # Bloque servidor WEB en production
-  apache_web:
-    build: ./production/apache_web
-    container_name: apache_web
-    restart: always
-    cap_add:
-      - NET_ADMIN
-    volumes:
-      - ./development/samba_ftp/data/publico:/mnt/publico:ro
-      - apache_maildata:/var/mail
-    ports:
-      - "8082:80"
-    dns:
-      - 172.20.0.6
-    networks:
-      bridge_local: {}
-      production_net:
-        ipv4_address: 172.30.0.20
+  #apache_web:
+  #  build: ./production/apache_web
+  #  container_name: apache_web
+  #  restart: always
+  #  cap_add:
+  #    - NET_ADMIN
+  #  volumes:
+  #    - ./development/samba_ftp/data/publico:/mnt/publico:ro
+  #    - apache_maildata:/var/mail
+  #  ports:
+  #    - "8082:80"
+  #  dns:
+  #    - 172.20.0.6
+  #  networks:
+  #    bridge_local: {}
+  #    production_net:
+  #      ipv4_address: 172.30.0.20
 
   # Bloque POSTFIX-MAIL en production
   postfix_mail:
