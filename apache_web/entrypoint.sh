@@ -18,7 +18,7 @@ cat <<EOF > /etc/msmtprc
 defaults
 auth           off
 tls            off
-logfile         /var/log/msmtp.log
+logfile        /var/log/msmtp.log
 
 account        default
 host           mail.prod.local
